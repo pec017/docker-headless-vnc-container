@@ -1,4 +1,4 @@
-FROM ghcr.io/pengcheng-cs/ubuntu-xfce-vnc:master
+FROM ubuntu:18.04
 
 # install ros-desktop-full
 RUN apt update \
