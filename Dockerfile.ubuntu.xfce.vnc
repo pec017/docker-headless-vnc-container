@@ -2,10 +2,9 @@
 
 FROM ubuntu:18.04
 
-MAINTAINER Simon Hofmann "simon.hofmann@consol.de"
-ENV REFRESHED_AT 2018-10-29
+ENV REFRESHED_AT 2020-11-03
 
-LABEL io.k8s.description="Headless VNC Container with Xfce window manager, firefox and chromium" \
+LABEL io.k8s.description="Headless VNC Container with Xfce window manager, chromium" \
       io.k8s.display-name="Headless VNC Container based on Ubuntu" \
       io.openshift.expose-services="6901:http,5901:xvnc" \
       io.openshift.tags="vnc, ubuntu, xfce" \
@@ -27,37 +26,103 @@ ENV HOME=/headless \
     NO_VNC_HOME=/headless/noVNC \
     DEBIAN_FRONTEND=noninteractive \
     VNC_COL_DEPTH=24 \
-    VNC_RESOLUTION=1280x1024 \
+    VNC_RESOLUTION=1600x900 \
     VNC_PW=vncpassword \
     VNC_VIEW_ONLY=false
 WORKDIR $HOME
 
+ENV LANG='en_US.UTF-8' \
+    LANGUAGE='en_US:en' \
+    LC_ALL='en_US.UTF-8'
+
 ### Add all install scripts for further steps
 ADD ./src/common/install/ $INST_SCRIPTS/
 ADD ./src/ubuntu/install/ $INST_SCRIPTS/
-RUN find $INST_SCRIPTS -name '*.sh' -exec chmod a+x {} +
 
-### Install some common tools
-RUN $INST_SCRIPTS/tools.sh
-ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en' LC_ALL='en_US.UTF-8'
+RUN find $INST_SCRIPTS -name '*.sh' -exec chmod a+x {} + \
+    && apt update \
+    && apt-get install -y vim wget net-tools locales bzip2 htop lsb-release \
+    && locale-gen en_US.UTF-8 \
+    && apt-get install -y python-numpy #used for websockify/novnc \
+    && apt-get install -y ttf-wqy-zenhei # Install custom fonts \
+    && wget -qO- https://dl.bintray.com/tigervnc/stable/tigervnc-1.8.0.x86_64.tar.gz | tar xz --strip 1 -C / \
+    && mkdir -p $NO_VNC_HOME/utils/websockify \
+    && wget -qO- https://github.com/novnc/noVNC/archive/v1.0.0.tar.gz | tar xz --strip 1 -C $NO_VNC_HOME \
+    && wget -qO- https://github.com/novnc/websockify/archive/v0.6.1.tar.gz | tar xz --strip 1 -C $NO_VNC_HOME/utils/websockify \
+    && chmod +x -v $NO_VNC_HOME/utils/*.sh \
+    && ln -s $NO_VNC_HOME/vnc_lite.html $NO_VNC_HOME/index.html \
+    && apt-get install -y chromium-browser chromium-browser-l10n chromium-codecs-ffmpeg \
+    && ln -s /usr/bin/chromium-browser /usr/bin/google-chrome \
+    && echo "CHROMIUM_FLAGS='--no-sandbox --start-maximized --user-data-dir'" > $HOME/.chromium-browser.init \
+    && apt-get install -y supervisor xfce4 xfce4-terminal xterm \
+    && apt-get install -y libnss-wrapper gettext \
+    && echo 'source $STARTUPDIR/generate_container_user' >> $HOME/.bashrc
+
+    # && sh -c '. /etc/lsb-release && echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list' \
+    # && apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654 \
+    # && apt update \
+    # && apt install -y  ros-melodic-desktop-full \
+    # && apt install -y python-rosdep python-rosinstall python-rosinstall-generator python-wstool build-essential python3-vcstool \
+    # && apt autoclean -y \
+    # && apt autoremove -y \
+    # && rm -rf /var/lib/apt/lists/* \
+    # && wget https://packages.osrfoundation.org/gazebo.key -O - | sudo apt-key add - \
+    # && echo "source /opt/ros/melodic/setup.bash" >> /root/.bashrc
+
+# echo "Install noVNC - HTML5 based VNC viewer"
+# mkdir -p $NO_VNC_HOME/utils/websockify
+# wget -qO- https://github.com/novnc/noVNC/archive/v1.0.0.tar.gz | tar xz --strip 1 -C $NO_VNC_HOME
+# # use older version of websockify to prevent hanging connections on offline containers, see https://github.com/ConSol/docker-headless-vnc-container/issues/50
+# wget -qO- https://github.com/novnc/websockify/archive/v0.6.1.tar.gz | tar xz --strip 1 -C $NO_VNC_HOME/utils/websockify
+# chmod +x -v $NO_VNC_HOME/utils/*.sh
+# ## create index.html to forward automatically to `vnc_lite.html`
+# ln -s $NO_VNC_HOME/vnc_lite.html $NO_VNC_HOME/index.html
+
+# echo "Install Chromium Browser"
+# apt-get update
+# apt-get install -y chromium-browser chromium-browser-l10n chromium-codecs-ffmpeg
+# apt-get clean -y
+# ln -s /usr/bin/chromium-browser /usr/bin/google-chrome
+# ### fix to start chromium in a Docker container, see https://github.com/ConSol/docker-headless-vnc-container/issues/2
+# echo "CHROMIUM_FLAGS='--no-sandbox --start-maximized --user-data-dir'" > $HOME/.chromium-browser.init
+
+# echo "Install Xfce4 UI components"
+# apt-get update
+# apt-get install -y supervisor xfce4 xfce4-terminal xterm
+# apt-get purge -y pm-utils xscreensaver*
+# apt-get clean -y
+
+# echo "Install nss-wrapper to be able to execute image as non-root user"
+# apt-get update
+# apt-get install -y libnss-wrapper gettext
+# apt-get clean -y
+
+# echo "add 'source generate_container_user' to .bashrc"
+
+# have to be added to hold all env vars correctly
+# echo 'source $STARTUPDIR/generate_container_user' >> $HOME/.bashrc
+
+# ### Install some common tools
+# RUN $INST_SCRIPTS/tools.sh
+# ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en' LC_ALL='en_US.UTF-8'
 
 ### Install custom fonts
-RUN $INST_SCRIPTS/install_custom_fonts.sh
+# RUN $INST_SCRIPTS/install_custom_fonts.sh
 
 ### Install xvnc-server & noVNC - HTML5 based VNC viewer
-RUN $INST_SCRIPTS/tigervnc.sh
-RUN $INST_SCRIPTS/no_vnc.sh
+# RUN $INST_SCRIPTS/tigervnc.sh
+# RUN $INST_SCRIPTS/no_vnc.sh
 
 # ### Install firefox and chrome browser
 # RUN $INST_SCRIPTS/firefox.sh
 # RUN $INST_SCRIPTS/chrome.sh
 
 ### Install xfce UI
-RUN $INST_SCRIPTS/xfce_ui.sh
+# RUN $INST_SCRIPTS/xfce_ui.sh
 ADD ./src/common/xfce/ $HOME/
 
 ### configure startup
-RUN $INST_SCRIPTS/libnss_wrapper.sh
+# RUN $INST_SCRIPTS/libnss_wrapper.sh
 ADD ./src/common/scripts $STARTUPDIR
 RUN $INST_SCRIPTS/set_user_permission.sh $STARTUPDIR $HOME
 
