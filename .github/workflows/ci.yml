@@ -35,8 +35,8 @@ jobs:
           echo Add other actions to build,
           echo test, and deploy your project.
 
-      # - name: Build the Docker image
-      #   run: docker build . --file Dockerfile.ubuntu.xfce.vnc --tag $IMAGE_NAME
+      - name: Build the Docker image
+        run: docker build . --file Dockerfile.ubuntu.xfce.vnc --tag $IMAGE_NAME
 
       # # - name: Log into GitHub Container Registry
       # #   run: echo "${{ secrets.CR_PAT }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
@@ -69,7 +69,7 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Push image to GitHub Container Registry
+      - name: Push image to DockerHub Registry
         run: |
           IMAGE_ID=${{ secrets.DOCKERHUB_USERNAME }}/$IMAGE_NAME
           # Change all uppercase to lowercase
