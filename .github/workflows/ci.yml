@@ -13,7 +13,7 @@ on:
 env:
   VNC_IMAGE_NAME: ubuntu-xfce-vnc
   ROS_IMAGE_NAME: ros-ubuntu-xfce-vnc
-  GLOBAL_IMAGE_VERSION: 2020110321
+  GLOBAL_IMAGE_VERSION: 2020110407
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -46,31 +46,12 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.CR_PAT }}
 
-      - name: Build the VNC Docker image
-        run: docker build . --file Dockerfile.ubuntu.xfce.vnc --tag $VNC_IMAGE_NAME
+      # - name: Build the VNC Docker image
+      #   run: docker build . --file Dockerfile.ubuntu.xfce.vnc --tag $VNC_IMAGE_NAME
 
-      - name: Push VNC image to GitHub Container Registry
-        run: |
-          IMAGE_ID=ghcr.io/${{ github.repository_owner }}/$VNC_IMAGE_NAME
-          # Change all uppercase to lowercase
-          IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
-          # Strip git ref prefix from version
-          VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
-          # Strip "v" prefix from tag name
-          [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
-          # Use Docker `latest` tag convention
-          [ "$VERSION" == "$default-branch" ] && VERSION=latest
-          echo IMAGE_ID=$IMAGE_ID
-          echo VERSION=$GLOBAL_IMAGE_VERSION
-          docker tag $VNC_IMAGE_NAME $IMAGE_ID:$GLOBAL_IMAGE_VERSION
-          docker push $IMAGE_ID:$GLOBAL_IMAGE_VERSION
-
-      # - name: Build the ROS Docker image
-      #   run: docker build . --file Dockerfile.ros --tag $ROS_IMAGE_NAME
-
-      # - name: Push ROS image to GitHub Container Registry
+      # - name: Push VNC image to GitHub Container Registry
       #   run: |
-      #     IMAGE_ID=ghcr.io/${{ github.repository_owner }}/$ROS_IMAGE_NAME
+      #     IMAGE_ID=ghcr.io/${{ github.repository_owner }}/$VNC_IMAGE_NAME
       #     # Change all uppercase to lowercase
       #     IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
       #     # Strip git ref prefix from version
@@ -81,18 +62,15 @@ jobs:
       #     [ "$VERSION" == "$default-branch" ] && VERSION=latest
       #     echo IMAGE_ID=$IMAGE_ID
       #     echo VERSION=$GLOBAL_IMAGE_VERSION
-      #     docker tag $ROS_IMAGE_NAME $IMAGE_ID:$GLOBAL_IMAGE_VERSION
+      #     docker tag $VNC_IMAGE_NAME $IMAGE_ID:$GLOBAL_IMAGE_VERSION
       #     docker push $IMAGE_ID:$GLOBAL_IMAGE_VERSION
 
-      - name: Login to DockerHub
-        uses: docker/login-action@v1
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Build the ROS Docker image
+        run: docker build . --file Dockerfile.ros.ubuntu --tag $ROS_IMAGE_NAME
 
-      - name: Push VNC image to DockerHub Registry
+      - name: Push ROS image to GitHub Container Registry
         run: |
-          IMAGE_ID=${{ secrets.DOCKERHUB_USERNAME }}/$VNC_IMAGE_NAME
+          IMAGE_ID=ghcr.io/${{ github.repository_owner }}/$ROS_IMAGE_NAME
           # Change all uppercase to lowercase
           IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
           # Strip git ref prefix from version
@@ -103,5 +81,27 @@ jobs:
           [ "$VERSION" == "$default-branch" ] && VERSION=latest
           echo IMAGE_ID=$IMAGE_ID
           echo VERSION=$GLOBAL_IMAGE_VERSION
-          docker tag $VNC_IMAGE_NAME $IMAGE_ID:$GLOBAL_IMAGE_VERSION
+          docker tag $ROS_IMAGE_NAME $IMAGE_ID:$GLOBAL_IMAGE_VERSION
           docker push $IMAGE_ID:$GLOBAL_IMAGE_VERSION
+
+      # - name: Login to DockerHub
+      #   uses: docker/login-action@v1
+      #   with:
+      #     username: ${{ secrets.DOCKERHUB_USERNAME }}
+      #     password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      # - name: Push VNC image to DockerHub Registry
+      #   run: |
+      #     IMAGE_ID=${{ secrets.DOCKERHUB_USERNAME }}/$VNC_IMAGE_NAME
+      #     # Change all uppercase to lowercase
+      #     IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
+      #     # Strip git ref prefix from version
+      #     VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+      #     # Strip "v" prefix from tag name
+      #     [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
+      #     # Use Docker `latest` tag convention
+      #     [ "$VERSION" == "$default-branch" ] && VERSION=latest
+      #     echo IMAGE_ID=$IMAGE_ID
+      #     echo VERSION=$GLOBAL_IMAGE_VERSION
+      #     docker tag $VNC_IMAGE_NAME $IMAGE_ID:$GLOBAL_IMAGE_VERSION
+      #     docker push $IMAGE_ID:$GLOBAL_IMAGE_VERSION
