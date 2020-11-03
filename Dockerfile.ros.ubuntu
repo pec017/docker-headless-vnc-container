@@ -7,7 +7,7 @@ RUN apt update \
     && apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654 \
     && apt update \
     && apt install -y ros-melodic-desktop-full \
-    && apt install -y python-rosdep python-rosinstall python-rosinstall-generator python-wstool build-essential python3-vcstool \
+    && apt install -y python-rosdep python-rosinstall python-rosinstall-generator python-wstool build-essential python3-vcstool python3-colcon-common-extensions \
     && apt autoclean -y \
     && apt autoremove -y \
     && rm -rf /var/lib/apt/lists/* \
