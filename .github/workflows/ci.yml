@@ -111,7 +111,17 @@ jobs:
       #     docker push $IMAGE_ID:$GLOBAL_IMAGE_VERSION
 
       - name: Build the ROS AWS sample Docker image
-        run: docker build . --file Dockerfile.ros.aws.robomaker.sample --tag $ROS_AWS_SAMPLE_IMAGE_NAME
+        run: |
+          docker build . --file Dockerfile.ros.aws.robomaker.sample --tag $ROS_AWS_SAMPLE_IMAGE_NAME
+          docker cp $ROS_AWS_SAMPLE_IMAGE_NAME /headless/aws-robomaker-sample-application-helloworld/robot_ws/bundle/output.tar ./robot_ws_output.tar
+          docker cp $ROS_AWS_SAMPLE_IMAGE_NAME /headless/aws-robomaker-sample-application-helloworld/simulation_ws/bundle/output.tar ./simulation_ws_output.tar
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: ros-output-artifacts
+          path: |
+            ./robot_ws_output.tar
+            ./simulation_ws_output.tar
 
       # - name: Login to DockerHub
       #   uses: docker/login-action@v1
