@@ -1,37 +1,35 @@
 FROM ghcr.io/pengcheng-cs/ros-ubuntu-xfce-vnc:202011040751
 
 # install colcon-bundle and other deps
-RUN apt-get update \
- && apt-get install -y \
-    curl \
-    dumb-init \
-    htop \
-    locales \
-    man \
-    nano \
-    git \
-    procps \
-    ssh \
-    sudo \
-    vim \
-    lsb-release \
-    wget \
-    python3-apt \
-    python3-pip \
-    && pip3 install -U setuptools pip \
-    && pip3 install --no-cache-dir colcon-ros-bundle \
-    && apt autoclean -y \
-    && apt autoremove -y \
-    && rm -rf /var/lib/apt/lists/*
-
+# RUN apt-get update \
+#  && apt-get install -y \
+#     curl \
+#     dumb-init \
+#     htop \
+#     locales \
+#     man \
+#     nano \
+#     git \
+#     procps \
+#     ssh \
+#     sudo \
+#     vim \
+#     lsb-release \
+#     wget \
+#     python3-apt \
+#     python3-pip \
+#     && pip3 install -U setuptools pip \
+#     && pip3 install --no-cache-dir colcon-ros-bundle \
+#     && apt autoclean -y \
+#     && apt autoremove -y \
+#     && rm -rf /var/lib/apt/lists/*
 
 RUN sed -i "s/# en_US.UTF-8/en_US.UTF-8/" /etc/locale.gen \
   && locale-gen \
-  && chsh -s /bin/bash
-
-RUN curl -fOL https://github.com/cdr/code-server/releases/download/v3.6.1/code-server_3.6.1_amd64.deb \
-    && sudo dpkg -i code-server_3.6.1_amd64.deb \
-    && rm code-server_3.6.1_amd64.deb
+  && chsh -s /bin/bash \
+  && curl -fOL https://github.com/cdr/code-server/releases/download/v3.6.1/code-server_3.6.1_amd64.deb \
+  && sudo dpkg -i code-server_3.6.1_amd64.deb \
+  && rm code-server_3.6.1_amd64.deb
 
 EXPOSE 8080
 # This way, if someone sets $DOCKER_USER, docker-exec will still work as
