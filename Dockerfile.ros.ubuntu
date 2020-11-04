@@ -3,7 +3,8 @@ FROM ghcr.io/pengcheng-cs/ubuntu-xfce-vnc:2020110321
 # install ros-desktop-full
 RUN apt update \
     && apt install -y dirmngr lsb-release curl wget htop git ssh sudo procps vim dumb-init \
-    && sh -c '. /etc/lsb-release && echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list' \
+    # && sh -c '. /etc/lsb-release && echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list' \
+    && sh -c '. /etc/lsb-release && echo "deb http://mirrors.tuna.tsinghua.edu.cn/ros/ubuntu/ `lsb_release -cs` main" > /etc/apt/sources.list.d/ros-latest.list' \
     && apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654 \
     && apt update \
     && apt install -y ros-melodic-desktop-full \
@@ -14,4 +15,4 @@ RUN apt update \
     && apt autoremove -y \
     && rm -rf /var/lib/apt/lists/* \
     && wget https://packages.osrfoundation.org/gazebo.key -O - | sudo apt-key add - \
-    && echo "source /opt/ros/melodic/setup.bash" >> /root/.bashrc
+    && echo "source /opt/ros/melodic/setup.bash" >> /headless/.bashrc

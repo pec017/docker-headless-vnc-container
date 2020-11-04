@@ -1,4 +1,4 @@
-FROM ghcr.io/pengcheng-cs/ros-ubuntu-xfce-vnc:202011040751
+FROM ghcr.io/pengcheng-cs/ros-ubuntu-xfce-vnc:202011041841
 
 RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 

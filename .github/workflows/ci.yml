@@ -15,7 +15,7 @@ env:
   ROS_IMAGE_NAME: ros-ubuntu-xfce-vnc
   ROS_AWS_SAMPLE_IMAGE_NAME: ros-aws-sample
   ROS_VSCODE_IMAGE_NAME: ros-ubuntu-vscode
-  GLOBAL_IMAGE_VERSION: 202011041805
+  GLOBAL_IMAGE_VERSION: 202011041841
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -73,40 +73,40 @@ jobs:
       #     docker tag $VNC_IMAGE_NAME $IMAGE_ID:$GLOBAL_IMAGE_VERSION
       #     docker push $IMAGE_ID:$GLOBAL_IMAGE_VERSION
 
-      # - name: Build the ROS Docker image
-      #   run: docker build . --file Dockerfile.ros.ubuntu --tag $ROS_IMAGE_NAME
+      - name: Build the ROS Docker image
+        run: docker build . --file Dockerfile.ros.ubuntu --tag $ROS_IMAGE_NAME
 
-      # - name: Push ROS image to GitHub Container Registry
-      #   run: |
-      #     IMAGE_ID=ghcr.io/${{ github.repository_owner }}/$ROS_IMAGE_NAME
-      #     # Change all uppercase to lowercase
-      #     IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
-      #     # Strip git ref prefix from version
-      #     VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
-      #     # Strip "v" prefix from tag name
-      #     [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
-      #     # Use Docker `latest` tag convention
-      #     [ "$VERSION" == "$default-branch" ] && VERSION=latest
-      #     echo IMAGE_ID=$IMAGE_ID
-      #     echo VERSION=$GLOBAL_IMAGE_VERSION
-      #     docker tag $ROS_IMAGE_NAME $IMAGE_ID:$GLOBAL_IMAGE_VERSION
-      #     docker push $IMAGE_ID:$GLOBAL_IMAGE_VERSION
+      - name: Push ROS image to GitHub Container Registry
+        run: |
+          IMAGE_ID=ghcr.io/${{ github.repository_owner }}/$ROS_IMAGE_NAME
+          # Change all uppercase to lowercase
+          IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
+          # Strip git ref prefix from version
+          VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+          # Strip "v" prefix from tag name
+          [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
+          # Use Docker `latest` tag convention
+          [ "$VERSION" == "$default-branch" ] && VERSION=latest
+          echo IMAGE_ID=$IMAGE_ID
+          echo VERSION=$GLOBAL_IMAGE_VERSION
+          docker tag $ROS_IMAGE_NAME $IMAGE_ID:$GLOBAL_IMAGE_VERSION
+          docker push $IMAGE_ID:$GLOBAL_IMAGE_VERSION
 
-      # - name: Push ROS image to DockerHub Registry
-      #   run: |
-      #     IMAGE_ID=${{ secrets.DOCKERHUB_USERNAME }}/$ROS_IMAGE_NAME
-      #     # Change all uppercase to lowercase
-      #     IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
-      #     # Strip git ref prefix from version
-      #     VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
-      #     # Strip "v" prefix from tag name
-      #     [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
-      #     # Use Docker `latest` tag convention
-      #     [ "$VERSION" == "$default-branch" ] && VERSION=latest
-      #     echo IMAGE_ID=$IMAGE_ID
-      #     echo VERSION=$GLOBAL_IMAGE_VERSION
-      #     docker tag $ROS_IMAGE_NAME $IMAGE_ID:$GLOBAL_IMAGE_VERSION
-      #     docker push $IMAGE_ID:$GLOBAL_IMAGE_VERSION
+      - name: Push ROS image to DockerHub Registry
+        run: |
+          IMAGE_ID=${{ secrets.DOCKERHUB_USERNAME }}/$ROS_IMAGE_NAME
+          # Change all uppercase to lowercase
+          IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
+          # Strip git ref prefix from version
+          VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+          # Strip "v" prefix from tag name
+          [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
+          # Use Docker `latest` tag convention
+          [ "$VERSION" == "$default-branch" ] && VERSION=latest
+          echo IMAGE_ID=$IMAGE_ID
+          echo VERSION=$GLOBAL_IMAGE_VERSION
+          docker tag $ROS_IMAGE_NAME $IMAGE_ID:$GLOBAL_IMAGE_VERSION
+          docker push $IMAGE_ID:$GLOBAL_IMAGE_VERSION
 
       - name: Build the ROS VSCode Docker image
         run: |
@@ -144,11 +144,11 @@ jobs:
           docker tag $ROS_VSCODE_IMAGE_NAME $IMAGE_ID:$GLOBAL_IMAGE_VERSION
           docker push $IMAGE_ID:$GLOBAL_IMAGE_VERSION
 
-      # - name: Build the ROS AWS sample Docker image
-      #   run: |
-      #     docker build . --file Dockerfile.ros.aws.robomaker.sample --tag $ROS_AWS_SAMPLE_IMAGE_NAME
-      #     docker run --rm --entrypoint cat $ROS_AWS_SAMPLE_IMAGE_NAME /headless/aws-robomaker-sample-application-helloworld/robot_ws/bundle/output.tar > ./robot_ws_output.tar
-      #     docker run --rm --entrypoint cat $ROS_AWS_SAMPLE_IMAGE_NAME /headless/aws-robomaker-sample-application-helloworld/simulation_ws/bundle/output.tar > ./simulation_ws_output.tar
+      - name: Build the ROS AWS sample Docker image
+        run: |
+          docker build . --file Dockerfile.ros.aws.robomaker.sample --tag $ROS_AWS_SAMPLE_IMAGE_NAME
+          docker run --rm --entrypoint cat $ROS_AWS_SAMPLE_IMAGE_NAME /headless/aws-robomaker-sample-application-helloworld/robot_ws/bundle/output.tar > ./robot_ws_output.tar
+          docker run --rm --entrypoint cat $ROS_AWS_SAMPLE_IMAGE_NAME /headless/aws-robomaker-sample-application-helloworld/simulation_ws/bundle/output.tar > ./simulation_ws_output.tar
 
       # - uses: actions/upload-artifact@v2
       #   with:
