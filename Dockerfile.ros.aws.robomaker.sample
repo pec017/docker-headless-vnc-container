@@ -26,22 +26,20 @@ RUN source /opt/ros/melodic/setup.bash \
     && sudo rosdep fix-permissions \
     && rosdep update
 
-RUN cd robot_ws \
+RUN cd aws-robomaker-sample-application-helloworld/robot_ws \
     && vcs import < .rosinstall \
     && rosdep install --from-paths src --ignore-src -r -y \
-    && colcon build \
-    && cd ..
+    && colcon build
 
-RUN cd simulation_ws \
+RUN cd aws-robomaker-sample-application-helloworld/simulation_ws \
     && vcs import < .rosinstall \
     && rosdep install --from-paths src --ignore-src -r -y \
-    && colcon build \
-    && cd ..
+    && colcon build
 
 RUN sudo apt-get install python3-pip \
     && pip3 install -U setuptools \
     && pip3 install colcon-ros-bundle
 
-RUN cd robot_ws \
+RUN cd aws-robomaker-sample-application-helloworld/robot_ws \
     && source install/local_setup.sh \
     && colcon bundle
