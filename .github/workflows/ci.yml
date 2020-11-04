@@ -92,7 +92,7 @@ jobs:
           pwd
           ls -l
           env
-          docker build --file Dockerfile.ros.vscode --tag $ROS_VSCODE_IMAGE_NAME $(pwd)
+          docker build --file Dockerfile.ros.vscode --tag $ROS_VSCODE_IMAGE_NAME $PWD
 
       - name: Push ROS image to GitHub Container Registry
         run: |
