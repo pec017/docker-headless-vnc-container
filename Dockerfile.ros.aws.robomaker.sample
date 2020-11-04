@@ -19,7 +19,7 @@ RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 
 RUN source /opt/ros/melodic/setup.bash \
     && sudo apt-get update \
-    && sudo apt-get install python3-pip \
+    && sudo apt-get install -y python3-pip \
     && pip3 install -U setuptools \
     && pip3 install colcon-ros-bundle \
     && git clone https://github.com/aws-robotics/aws-robomaker-sample-application-helloworld.git \
