@@ -1,20 +1,5 @@
 FROM ghcr.io/pengcheng-cs/ros-ubuntu-xfce-vnc:202011040751
 
-# # install ros-desktop-full
-# RUN apt update \
-#     && apt install -y dirmngr lsb-release \
-#     && sh -c '. /etc/lsb-release && echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list' \
-#     && apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654 \
-#     && apt update \
-#     && apt install -y ros-melodic-desktop-full \
-#     && apt install -y python-rosdep python-rosinstall python-rosinstall-generator python-wstool build-essential python3-vcstool \
-#     && apt autoclean -y \
-#     && apt autoremove -y \
-#     && rm -rf /var/lib/apt/lists/* \
-#     && wget https://packages.osrfoundation.org/gazebo.key -O - | sudo apt-key add - \
-#     && echo "source /opt/ros/melodic/setup.bash" >> /root/.bashrc
-
-
 RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 
 RUN source /opt/ros/melodic/setup.bash \
@@ -33,17 +18,12 @@ RUN source /opt/ros/melodic/setup.bash \
     && rosdep install --from-paths src --ignore-src -r -y \
     && colcon build \
     && source install/local_setup.sh \
-    && colcon bundle
-
-# RUN cd aws-robomaker-sample-application-helloworld/simulation_ws \
-#     && vcs import < .rosinstall \
-#     && rosdep install --from-paths src --ignore-src -r -y \
-#     && colcon build
-
-# RUN sudo apt-get install python3-pip \
-#     && pip3 install -U setuptools \
-#     && pip3 install colcon-ros-bundle
-
-# RUN cd aws-robomaker-sample-application-helloworld/robot_ws \
-#     && source install/local_setup.sh \
-#     && colcon bundle
+    && colcon bundle \
+    && cd .. \
+    && cd simulation_ws \
+    && vcs import < .rosinstall \
+    && rosdep install --from-paths src --ignore-src -r -y \
+    && colcon build \
+    && source install/local_setup.sh \
+    && colcon bundle \
+    && find . -print
