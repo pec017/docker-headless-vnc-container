@@ -88,8 +88,8 @@ jobs:
 
       - name: Build the ROS VSCode Docker image
         run: |
+          pwd
           ls -l
-          ls vscode
           docker build . --file Dockerfile.ros.vscode --tag $ROS_VSCODE_IMAGE_NAME
 
       - name: Push ROS image to GitHub Container Registry
