@@ -1,7 +1,5 @@
 FROM ghcr.io/pengcheng-cs/ros-ubuntu-xfce-vnc:202011040751
 
-COPY ./vscode/entrypoint.sh /usr/bin/entrypoint.sh
-
 # install colcon-bundle and other deps
 RUN apt-get update \
  && apt-get install -y \
@@ -42,4 +40,4 @@ EXPOSE 8080
 
 WORKDIR /home/coder
 
-ENTRYPOINT ["/usr/bin/entrypoint.sh", "--bind-addr", "0.0.0.0:8080", "--auth", "none", "."]
+ENTRYPOINT ["dumb-init", "/usr/bin/code-server", "--bind-addr", "0.0.0.0:8080", "--auth", "none", "."]
