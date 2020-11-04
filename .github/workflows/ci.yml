@@ -113,8 +113,8 @@ jobs:
       - name: Build the ROS AWS sample Docker image
         run: |
           docker build . --file Dockerfile.ros.aws.robomaker.sample --tag $ROS_AWS_SAMPLE_IMAGE_NAME
-          docker cp $ROS_AWS_SAMPLE_IMAGE_NAME /headless/aws-robomaker-sample-application-helloworld/robot_ws/bundle/output.tar ./robot_ws_output.tar
-          docker cp $ROS_AWS_SAMPLE_IMAGE_NAME /headless/aws-robomaker-sample-application-helloworld/simulation_ws/bundle/output.tar ./simulation_ws_output.tar
+          docker run --rm --entrypoint cat $ROS_AWS_SAMPLE_IMAGE_NAME /headless/aws-robomaker-sample-application-helloworld/robot_ws/bundle/output.tar > ./robot_ws_output.tar
+          docker run --rm --entrypoint cat $ROS_AWS_SAMPLE_IMAGE_NAME /headless/aws-robomaker-sample-application-helloworld/simulation_ws/bundle/output.tar > ./simulation_ws_output.tar
 
       - uses: actions/upload-artifact@v2
         with:
