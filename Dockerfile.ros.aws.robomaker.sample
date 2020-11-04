@@ -15,7 +15,7 @@ FROM ghcr.io/pengcheng-cs/ros-ubuntu-xfce-vnc:202011040751
 #     && echo "source /opt/ros/melodic/setup.bash" >> /root/.bashrc
 
 
-RUN rm /bin/sh \ && ln -s /bin/bash /bin/sh
+RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 
 RUN source /opt/ros/melodic/setup.bash \
     git clone https://github.com/aws-robotics/aws-robomaker-sample-application-helloworld.git \
