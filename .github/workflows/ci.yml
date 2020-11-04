@@ -87,7 +87,10 @@ jobs:
       #     docker push $IMAGE_ID:$GLOBAL_IMAGE_VERSION
 
       - name: Build the ROS VSCode Docker image
-        run: docker build . --file Dockerfile.ros.vscode --tag $ROS_VSCODE_IMAGE_NAME
+        run: |
+          ls -l
+          ls vscode
+          docker build . --file Dockerfile.ros.vscode --tag $ROS_VSCODE_IMAGE_NAME
 
       - name: Push ROS image to GitHub Container Registry
         run: |
