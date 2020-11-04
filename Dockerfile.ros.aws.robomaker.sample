@@ -19,27 +19,31 @@ RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 
 RUN source /opt/ros/melodic/setup.bash \
     && sudo apt-get update \
+    && sudo apt-get install python3-pip \
+    && pip3 install -U setuptools \
+    && pip3 install colcon-ros-bundle \
     && git clone https://github.com/aws-robotics/aws-robomaker-sample-application-helloworld.git \
     && cd aws-robomaker-sample-application-helloworld \
     && sudo rosdep init \
     && rosdep update \
     && sudo rosdep fix-permissions \
-    && rosdep update
-
-RUN cd aws-robomaker-sample-application-helloworld/robot_ws \
+    && rosdep update \
+    && cd robot_ws \
     && vcs import < .rosinstall \
     && rosdep install --from-paths src --ignore-src -r -y \
-    && colcon build
-
-RUN cd aws-robomaker-sample-application-helloworld/simulation_ws \
-    && vcs import < .rosinstall \
-    && rosdep install --from-paths src --ignore-src -r -y \
-    && colcon build
-
-RUN sudo apt-get install python3-pip \
-    && pip3 install -U setuptools \
-    && pip3 install colcon-ros-bundle
-
-RUN cd aws-robomaker-sample-application-helloworld/robot_ws \
+    && colcon build \
     && source install/local_setup.sh \
     && colcon bundle
+
+# RUN cd aws-robomaker-sample-application-helloworld/simulation_ws \
+#     && vcs import < .rosinstall \
+#     && rosdep install --from-paths src --ignore-src -r -y \
+#     && colcon build
+
+# RUN sudo apt-get install python3-pip \
+#     && pip3 install -U setuptools \
+#     && pip3 install colcon-ros-bundle
+
+# RUN cd aws-robomaker-sample-application-helloworld/robot_ws \
+#     && source install/local_setup.sh \
+#     && colcon bundle
