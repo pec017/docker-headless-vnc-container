@@ -87,6 +87,7 @@ jobs:
       #     docker push $IMAGE_ID:$GLOBAL_IMAGE_VERSION
 
       - name: Build the ROS VSCode Docker image
+        working-directory: .
         run: |
           pwd
           ls -l
