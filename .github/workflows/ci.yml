@@ -178,21 +178,21 @@ jobs:
         run: |
           docker build . --file Dockerfile.vscode.chrome --tag $VSCODE_CHROME_IMAGE_NAME
 
-      - name: Push VSCode Chrome image to GitHub Container Registry
-        run: |
-          IMAGE_ID=ghcr.io/${{ github.repository_owner }}/$VSCODE_CHROME_IMAGE_NAME
-          # Change all uppercase to lowercase
-          IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
-          # Strip git ref prefix from version
-          VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
-          # Strip "v" prefix from tag name
-          [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
-          # Use Docker `latest` tag convention
-          [ "$VERSION" == "$default-branch" ] && VERSION=latest
-          echo IMAGE_ID=$IMAGE_ID
-          echo VERSION=$GLOBAL_IMAGE_VERSION
-          docker tag $VSCODE_CHROME_IMAGE_NAME $IMAGE_ID:$GLOBAL_IMAGE_VERSION
-          docker push $IMAGE_ID:$GLOBAL_IMAGE_VERSION
+      # - name: Push VSCode Chrome image to GitHub Container Registry
+      #   run: |
+      #     IMAGE_ID=ghcr.io/${{ github.repository_owner }}/$VSCODE_CHROME_IMAGE_NAME
+      #     # Change all uppercase to lowercase
+      #     IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
+      #     # Strip git ref prefix from version
+      #     VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+      #     # Strip "v" prefix from tag name
+      #     [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
+      #     # Use Docker `latest` tag convention
+      #     [ "$VERSION" == "$default-branch" ] && VERSION=latest
+      #     echo IMAGE_ID=$IMAGE_ID
+      #     echo VERSION=$GLOBAL_IMAGE_VERSION
+      #     docker tag $VSCODE_CHROME_IMAGE_NAME $IMAGE_ID:$GLOBAL_IMAGE_VERSION
+      #     docker push $IMAGE_ID:$GLOBAL_IMAGE_VERSION
 
       - name: Push VSCode Chrome image to DockerHub Registry
         run: |
@@ -206,6 +206,6 @@ jobs:
           # Use Docker `latest` tag convention
           [ "$VERSION" == "$default-branch" ] && VERSION=latest
           echo IMAGE_ID=$IMAGE_ID
-          echo VERSION=$VSCODE_CHROME_IMAGE_NAME
-          docker tag $ROS_VSCODE_IMAGE_NAME $IMAGE_ID:$GLOBAL_IMAGE_VERSION
+          echo VERSION=$GLOBAL_IMAGE_VERSION
+          docker tag $VSCODE_CHROME_IMAGE_NAME $IMAGE_ID:$GLOBAL_IMAGE_VERSION
           docker push $IMAGE_ID:$GLOBAL_IMAGE_VERSION
