@@ -1,5 +1,7 @@
 FROM ubuntu:18.04
 
+RUN rm /bin/sh && ln -s /bin/bash /bin/sh
+
 RUN apt update \
     && apt install -y curl wget htop git ssh sudo zsh dumb-init mercurial make binutils bison gcc build-essential \
     && bash -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" \
@@ -7,10 +9,9 @@ RUN apt update \
     && apt autoremove -y \
     && rm -rf /var/lib/apt/lists/*
 
-RUN rm /bin/sh && ln -s /bin/bash /bin/sh \
-     && bash -c "$(curl -s -S -L https://raw.githubusercontent.com/moovweb/gvm/master/binscripts/gvm-installer)" && source /root/.gvm/scripts/gvm \
-     && gvm install go1.14 \
-     && gvm use go1.14 --default
+RUN bash -c "$(curl -s -S -L https://raw.githubusercontent.com/moovweb/gvm/master/binscripts/gvm-installer)" && source /root/.gvm/scripts/gvm \
+    && gvm install go1.14 \
+    && gvm use go1.14 --default
 
 RUN curl -fOL https://github.com/cdr/code-server/releases/download/v3.6.1/code-server_3.6.1_amd64.deb \
     && sudo dpkg -i code-server_3.6.1_amd64.deb \
