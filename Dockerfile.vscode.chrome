@@ -1,7 +1,7 @@
 FROM ubuntu:18.04
 
 RUN apt update \
-    && apt install -y curl wget htop git ssh \
+    && apt install -y curl wget htop git ssh dumb-init \
     && apt autoclean -y \
     && apt autoremove -y \
     && rm -rf /var/lib/apt/lists/*

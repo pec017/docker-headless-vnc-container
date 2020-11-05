@@ -16,7 +16,7 @@ env:
   ROS_AWS_SAMPLE_IMAGE_NAME: ros-aws-sample
   ROS_VSCODE_IMAGE_NAME: ros-ubuntu-vscode
   VSCODE_CHROME_IMAGE_NAME: ubuntu-vscode-chrome
-  GLOBAL_IMAGE_VERSION: 202011051956
+  GLOBAL_IMAGE_VERSION: 202011052002
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
