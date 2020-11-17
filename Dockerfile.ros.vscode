@@ -1,4 +1,4 @@
-FROM ghcr.io/pengcheng-cs/ros-ubuntu-xfce-vnc:202011041841
+FROM ghcr.io/pengcheng-cs/ros-ubuntu-xfce-vnc:202011171158
 
 # install colcon-bundle and other deps
 # RUN apt-get update \
