@@ -180,7 +180,7 @@ RUN mkdir -p /root/Desktop
 # COPY ./firefox.desktop_applications /usr/share/applications/firefox.desktop
 # COPY ./terminator.desktop /root/Desktop
 RUN curl -o /usr/share/applications/firefox.desktop https://raw.githubusercontent.com/willkessler/nvidia-docker-novnc/master/autonomous_sys_build/firefox.desktop_applications
-RUN curl -o /root/Desktop https://raw.githubusercontent.com/willkessler/nvidia-docker-novnc/master/autonomous_sys_build/terminator.desktop
+RUN curl -o /root/Desktop/terminator.desktop https://raw.githubusercontent.com/willkessler/nvidia-docker-novnc/master/autonomous_sys_build/terminator.desktop
 
 RUN mkdir -p /root/.config/terminator
 # COPY ./terminator_config /root/.config/terminator/config
