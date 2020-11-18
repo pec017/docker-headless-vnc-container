@@ -82,7 +82,8 @@ RUN curl -fsSL https://github.com/novnc/noVNC/archive/v${NOVNC_VERSION}.tar.gz |
     ln -s /opt/noVNC/vnc_lite.html /opt/noVNC/index.html && \
     cd /opt/websockify && make
 
-COPY self.pem /
+# COPY self.pem /
+RUN curl -o /self.pem https://raw.githubusercontent.com/willkessler/nvidia-docker-novnc/master/autonomous_sys_build/self.pem
 
 RUN echo 'no-remote-connections\n\
 no-httpd\n\
