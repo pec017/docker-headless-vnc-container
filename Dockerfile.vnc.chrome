@@ -249,10 +249,10 @@ RUN apt update \
     && wget https://packages.osrfoundation.org/gazebo.key -O - | sudo apt-key add - \
     && echo "source /opt/ros/melodic/setup.bash" >> /root/.bashrc
 
-# Upgrade gazebo to gazebo v7
-RUN sh -c 'echo "deb http://packages.osrfoundation.org/gazebo/ubuntu-stable `lsb_release -cs` main" > /etc/apt/sources.list.d/gazebo-stable.list'
-RUN wget http://packages.osrfoundation.org/gazebo.key -O - | apt-key add -
-RUN apt-get update -y && apt-get install -y gazebo7
+# # Upgrade gazebo to gazebo v7
+# RUN sh -c 'echo "deb http://packages.osrfoundation.org/gazebo/ubuntu-stable `lsb_release -cs` main" > /etc/apt/sources.list.d/gazebo-stable.list'
+# RUN wget http://packages.osrfoundation.org/gazebo.key -O - | apt-key add -
+# RUN apt-get update -y && apt-get install -y gazebo7
 
 # Add miniconda to root's PATH
 RUN echo "export PATH=/root/miniconda3:$PATH" >> /root/.bashrc
