@@ -17,7 +17,7 @@ env:
   ROS_VSCODE_IMAGE_NAME: ros-ubuntu-vscode
   VSCODE_CHROME_IMAGE_NAME: ubuntu-vscode-chrome
   VNC_CHROME_IMAGE_NAME: ubuntu-vnc-chrome
-  GLOBAL_IMAGE_VERSION: 202011171922
+  GLOBAL_IMAGE_VERSION: 202011181556
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
