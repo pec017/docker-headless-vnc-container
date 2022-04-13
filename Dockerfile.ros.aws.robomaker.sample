@@ -1,0 +1,29 @@
+FROM ghcr.io/pengcheng-cs/ros-ubuntu-xfce-vnc:202011041841
+
+RUN rm /bin/sh && ln -s /bin/bash /bin/sh
+
+RUN source /opt/ros/melodic/setup.bash \
+    && sudo apt-get update \
+    && sudo apt-get install -y python3-pip \
+    && pip3 install -U setuptools \
+    && pip3 install colcon-ros-bundle \
+    && git clone https://github.com/aws-robotics/aws-robomaker-sample-application-helloworld.git \
+    && cd aws-robomaker-sample-application-helloworld \
+    && sudo rosdep init \
+    && rosdep update \
+    && sudo rosdep fix-permissions \
+    && rosdep update \
+    && cd robot_ws \
+    && vcs import < .rosinstall \
+    && rosdep install --from-paths src --ignore-src -r -y \
+    && colcon build \
+    && source install/local_setup.sh \
+    && colcon bundle \
+    && cd .. \
+    && cd simulation_ws \
+    && vcs import < .rosinstall \
+    && rosdep install --from-paths src --ignore-src -r -y \
+    && colcon build \
+    && source install/local_setup.sh \
+    && colcon bundle \
+    && find .. -print
